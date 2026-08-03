@@ -14,12 +14,12 @@ public class LocalFileStorageService implements FileStorageService {
     private static final String UPLOAD_DIR = "uploads";
 
     @Override
-    public String store (MultipartFile file) throws IOException {
+    public String store (MultipartFile file, String storedFileName) throws IOException {
         Path uploadPath = Paths.get(UPLOAD_DIR);
         if (!Files.exists(uploadPath)){
             Files.createDirectory(uploadPath);
         }
-        Path filePath = uploadPath.resolve(file.getOriginalFilename());
+        Path filePath = uploadPath.resolve(storedFileName);
         Files.copy(file.getInputStream(), filePath);
         return filePath.toString();
     }
