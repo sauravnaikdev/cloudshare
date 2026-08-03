@@ -1,7 +1,8 @@
 package com.cloudshare.service;
 
+import com.cloudshare.model.FileMetadata;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
-    String upload(MultipartFile file);
+    FileMetadata uploadFile(MultipartFile file);
 }

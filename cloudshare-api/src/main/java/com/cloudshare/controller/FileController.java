@@ -1,5 +1,7 @@
 package com.cloudshare.controller;
 
+import com.cloudshare.dto.ApiResponse;
+import com.cloudshare.model.FileMetadata;
 import com.cloudshare.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,13 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file")MultipartFile file){
-        return ResponseEntity.ok(fileService.upload(file));
+    public ApiResponse<FileMetadata> uploadFile(@RequestParam("file") MultipartFile file) {
+
+        FileMetadata metadata = fileService.uploadFile(file);
+
+        return ApiResponse.success(
+                "File uploaded successfully",
+                metadata
+        );
     }
 }
