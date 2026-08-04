@@ -1,5 +1,6 @@
 package com.cloudshare.service.impl;
 
+import com.cloudshare.exception.FileStorageException;
 import com.cloudshare.model.FileMetadata;
 import com.cloudshare.service.FileService;
 import com.cloudshare.service.storage.FileStorageService;
@@ -19,7 +20,8 @@ public class FileServiceImpl implements FileService {
     private final FileStorageService fileStorageService;
 
     @Override
-    public FileMetadata uploadFile (MultipartFile file){
+    public FileMetadata uploadFile (MultipartFile file) {
+//        throw new FileStorageException("Testing Global Exception");
         try{
             String originalFileName = file.getOriginalFilename();
             String extension = "";
@@ -40,7 +42,8 @@ public class FileServiceImpl implements FileService {
                     "UPLOADED"
             );
         } catch (IOException e) {
-        throw new RuntimeException("Unable to upload file", e);
+        throw new FileStorageException("Unable to upload file", e);
+
         }
 
     }
