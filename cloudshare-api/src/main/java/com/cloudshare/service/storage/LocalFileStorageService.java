@@ -1,9 +1,12 @@
 package com.cloudshare.service.storage;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +23,25 @@ public class LocalFileStorageService implements FileStorageService {
             Files.createDirectory(uploadPath);
         }
         Path filePath = uploadPath.resolve(storedFileName);
+        System.out.println("Saving File At : " + filePath.toAbsolutePath());
         Files.copy(file.getInputStream(), filePath);
         return filePath.toString();
+    }
+
+    @Override
+    public Resource loadAsResource(String fileName) {
+        try {
+            Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName).normalize();
+            System.out.println("Looking For : " + filePath.toAbsolutePath());
+            Resource resource = new UrlResource(filePath.toUri());
+            System.out.println("Exists : " + resource.exists());
+            if (resource.exists()) {
+                return resource;
+            }
+            throw new RuntimeException("File not found.");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Unable to read file.", e);
+        }
+
     }
 }

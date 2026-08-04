@@ -4,6 +4,7 @@ import com.cloudshare.model.FileMetadata;
 import com.cloudshare.service.FileService;
 import com.cloudshare.service.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +24,7 @@ public class FileServiceImpl implements FileService {
             String originalFileName = file.getOriginalFilename();
             String extension = "";
             if (originalFileName != null && originalFileName.contains(".")){
-                originalFileName.substring(originalFileName.lastIndexOf("."));
+                extension = originalFileName.substring(originalFileName.lastIndexOf("."));
             }
             String id = UUID.randomUUID().toString();
             String storedFileName = id + extension;
@@ -41,6 +42,13 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
         throw new RuntimeException("Unable to upload file", e);
         }
+
+    }
+
+    @Override
+    public Resource downloadFile(String fileName) {
+
+        return fileStorageService.loadAsResource(fileName);
 
     }
 }
