@@ -4,6 +4,7 @@ import com.cloudshare.exception.FileStorageException;
 import com.cloudshare.model.FileMetadata;
 import com.cloudshare.service.FileService;
 import com.cloudshare.service.storage.FileStorageService;
+import com.cloudshare.validation.FileValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
 
     private final FileStorageService fileStorageService;
+    private final FileValidator fileValidator;
 
+    //UPLOAD File logic
     @Override
     public FileMetadata uploadFile (MultipartFile file) {
 //        throw new FileStorageException("Testing Global Exception");
+        fileValidator.validate(file);
         try{
             String originalFileName = file.getOriginalFilename();
             String extension = "";
@@ -48,6 +52,7 @@ public class FileServiceImpl implements FileService {
 
     }
 
+    //DOWNLOAD File logic
     @Override
     public Resource downloadFile(String fileName) {
 
