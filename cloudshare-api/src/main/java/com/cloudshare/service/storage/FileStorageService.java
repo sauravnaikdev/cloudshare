@@ -9,4 +9,5 @@ import java.io.IOException;
 public interface FileStorageService {
     String store(MultipartFile file, String storedFileName) throws IOException;
     Resource loadAsResource(String fileName);
+    void delete(String fileName);
 }

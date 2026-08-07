@@ -25,4 +25,9 @@ public class InMemoryFileRepository {
     public void delete(String id) {
         fileStore.remove(id);
     }
+
+    public boolean existsById(String id) {
+        return fileStore.containsKey(id);
+    }
+
 }

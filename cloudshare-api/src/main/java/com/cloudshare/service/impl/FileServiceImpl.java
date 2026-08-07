@@ -71,4 +71,12 @@ public class FileServiceImpl implements FileService {
     public List<FileMetadata> getAllFiles() {
         return repository.findAll();
     }
+
+    @Override
+    public void deleteFile(String id) {
+
+        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new FileStorageException("File not found."));
+        fileStorageService.delete(metadata.getStoredFileName());
+        repository.delete(id);
+    }
 }

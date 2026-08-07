@@ -39,4 +39,11 @@ public class FileController {
         ApiResponse<List<FileMetadata>> response = new ApiResponse<>(true, "Files fetched successfully", files, LocalDateTime.now());
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> deleteFile(@PathVariable String id) {
+        fileService.deleteFile(id);
+        ApiResponse<Object> response = new ApiResponse<>(true, "File deleted successfully",null, LocalDateTime.now());
+        return ResponseEntity.ok(response);
+    }
 }
