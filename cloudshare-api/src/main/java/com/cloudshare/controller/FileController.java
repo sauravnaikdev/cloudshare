@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/v1/files")
 @RequiredArgsConstructor
@@ -18,14 +20,10 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public ApiResponse<FileMetadata> uploadFile(@RequestParam("file") MultipartFile file) {
-
+    public ResponseEntity<ApiResponse<FileMetadata>> uploadFile(@RequestParam("file") MultipartFile file){
         FileMetadata metadata = fileService.uploadFile(file);
-
-        return ApiResponse.success(
-                "File uploaded successfully",
-                metadata
-        );
+        ApiResponse<FileMetadata> response = new ApiResponse<>(true, "File uploaded successfully", metadata, LocalDateTime.now());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/download/{fileName}")
