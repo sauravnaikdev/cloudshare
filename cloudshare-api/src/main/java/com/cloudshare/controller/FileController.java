@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/files")
@@ -30,5 +31,12 @@ public class FileController {
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName){
         Resource resource = fileService.downloadFile(fileName);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=\""+resource.getFilename()+"\"").body(resource);
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<FileMetadata>>> getAllFiles() {
+        List<FileMetadata> files = fileService.getAllFiles();
+        ApiResponse<List<FileMetadata>> response = new ApiResponse<>(true, "Files fetched successfully", files, LocalDateTime.now());
+        return ResponseEntity.ok(response);
     }
 }

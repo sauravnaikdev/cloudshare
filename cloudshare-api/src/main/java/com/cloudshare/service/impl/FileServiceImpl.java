@@ -2,6 +2,7 @@ package com.cloudshare.service.impl;
 
 import com.cloudshare.exception.FileStorageException;
 import com.cloudshare.model.FileMetadata;
+import com.cloudshare.repository.InMemoryFileRepository;
 import com.cloudshare.service.FileService;
 import com.cloudshare.service.storage.FileStorageService;
 import com.cloudshare.validation.FileValidator;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +22,7 @@ public class FileServiceImpl implements FileService {
 
     private final FileStorageService fileStorageService;
     private final FileValidator fileValidator;
+    private final InMemoryFileRepository repository;
 
     //UPLOAD File logic
     @Override
@@ -35,7 +38,7 @@ public class FileServiceImpl implements FileService {
             String id = UUID.randomUUID().toString();
             String storedFileName = id + extension;
             String storagePath = fileStorageService.store(file, storedFileName);
-            return new FileMetadata(
+            FileMetadata metadata =  new FileMetadata(
                     id,
                     originalFileName,
                     storedFileName,
@@ -45,10 +48,15 @@ public class FileServiceImpl implements FileService {
                     LocalDateTime.now(),
                     "UPLOADED"
             );
+
+            repository.save(metadata);
+            return metadata;
+
         } catch (IOException e) {
         throw new FileStorageException("Unable to upload file", e);
 
         }
+
 
     }
 
@@ -58,5 +66,9 @@ public class FileServiceImpl implements FileService {
 
         return fileStorageService.loadAsResource(fileName);
 
+    }
+
+    public List<FileMetadata> getAllFiles() {
+        return repository.findAll();
     }
 }
